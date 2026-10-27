@@ -1,12 +1,13 @@
 (define (domain lunar)
+    ; Defining the PDDL features we need to use
     (:requirements :strips :typing :negative-preconditions)
-
     
+    ; Things that we need to use in our simulation and defining them to data type object.
     (:types
         rover lander waypoint data sample - object
     )
 
-
+    ; The things that the planner uses to keep track of what's happening
     (:predicates
         (at ?r - rover ?w - waypoint) ; rover is at waypoint
         (where-lander ?l - lander ?w - waypoint) ; lander is at waypoint
@@ -14,7 +15,7 @@
         (belongs-to ?r - rover ?l - lander) ; rover belongs to lander
         (deployed ?r - rover) ; rover is deployed
 
-        (data-target ?d - data ?w - waypoint)
+        (data-target ?d - data ?w - waypoint)  ; data at waypoint
         (carrying-data ?r - rover ?d - data) ; rover is carrying data
         (transmitted ?d - data ?l - lander) ; data has been transmitted to lander
         (empty-memory ?r - rover) ; rover has empty memory
@@ -22,33 +23,17 @@
         (carrying-sample ?r - rover ?s - sample) ; rover is carrying a sample
         (sample-storage ?s - sample ?l - lander) ; sample is stored in lander
         (sample-at ?s - sample ?w - waypoint) ; sample is at waypoint
-        (empty-hands ?r - rover)
-        (lander-empty ?l - lander)
+        (empty-hands ?r - rover)    ; rover is empty handed
+        (lander-empty ?l - lander)  ; lander is empty
     )
 
-    ; -------------------------------
-    ; Actions
-    ; -------------------------------
-
-    ; EXAMPLE
-
-    ; (:action action-template
-    ;     :parameters (?p - parameter_type)
-    ;     :precondition (and
-    ;         (one_arity_predicate ?p)
-    ;     )
-    ;     :effect
-    ;     (and
-    ;         (no_arity_predicate)
-    ;         (not (one_arity_predicate ?p))
-    ;     )
-    ; )
 ;---------- --------deploy action-------------------
+; Action to get the rover out of the lander to start the mission
     (:action deploy
         :parameters (?r - rover ?l - lander ?w - waypoint)
         :precondition (and
             (not (deployed ?r)) ;rover is not deployed yet
-            (belongs-to ?r ?l) ;rover belongs to lander
+            (belongs-to ?r ?l) ; rover belongs to lander
             (where-lander ?l ?w) ;lander is at waypoint
         )
         :effect (and
@@ -57,6 +42,7 @@
         )
     )
 ;------------------move action----------------------
+; actions defined for the movement of the rover.
     (:action move
         :parameters (?r - rover ?from - waypoint ?to - waypoint)
         :precondition (and
@@ -69,12 +55,13 @@
         )
     )
 ;----------------capture image action----------------
+; actions defined for the movement of the rover.
     (:action capture-image
         :parameters (?r - rover ?w - waypoint ?d - data)
         :precondition (and
             (at ?r ?w) ;rover is at waypoint
             (empty-memory ?r) ;rover has empty memory
-            (data-target ?d ?w)
+            (data-target ?d ?w) ; data is at the waypoint
         )
         :effect (and
             (not (empty-memory ?r)) ; memory is no longer empty
@@ -82,7 +69,8 @@
         )
     )
 
-;---------------sending the captured data back to the base---------------
+;---------------sending the captured data back to the base---------------\
+; actions defined to send the data back to the base
     (:action transmit-data
         :parameters (?r - rover ?d - data ?l - lander)
         :precondition (and
