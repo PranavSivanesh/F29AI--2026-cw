@@ -77,7 +77,7 @@
     )
 ;----------------capture image action----------------
 ; actions defined for the movement of the rover.
-    (:action capture-image
+    (:action capture-data
         :parameters (?r - rover ?w - waypoint ?d - data)
         :precondition (and
             (at ?r ?w) ;rover is at waypoint

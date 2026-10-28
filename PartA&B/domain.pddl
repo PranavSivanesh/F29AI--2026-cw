@@ -15,6 +15,7 @@
         (belongs-to ?r - rover ?l - lander) ; rover belongs to lander
         (deployed ?r - rover) ; rover is deployed
 
+  
         (data-target ?d - data ?w - waypoint)  ; data at waypoint
         (carrying-data ?r - rover ?d - data) ; rover is carrying data
         (transmitted ?d - data ?l - lander) ; data has been transmitted to lander
@@ -56,7 +57,7 @@
     )
 ;----------------capture image action----------------
 ; actions defined for the movement of the rover.
-    (:action capture-image
+    (:action capture-data
         :parameters (?r - rover ?w - waypoint ?d - data)
         :precondition (and
             (at ?r ?w) ;rover is at waypoint
@@ -117,4 +118,3 @@
         )
     )
 )
-
